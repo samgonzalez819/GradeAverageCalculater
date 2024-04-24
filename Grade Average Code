@@ -1,0 +1,87 @@
+#include <iostream>
+#include <algorithm>
+#include <numeric>
+#include <string>
+
+using namespace std;
+
+static void recursiveBubbleSort(int arr[], int n) {
+    if (n == 1)
+        return;
+
+    for (int i = 0; i < n - 1; i++) {
+        if (arr[i] > arr[i + 1])
+            swap(arr[i], arr[i + 1]);
+    }
+    recursiveBubbleSort(arr, n - 1);
+}
+
+static double calculateAverage(int arr[], int n, int pointsPossible) {
+    int totalScore = accumulate(arr, arr + n, 0);
+    return (static_cast<double>(totalScore) / (n * pointsPossible)) * 100;
+}
+
+static int findMinimum(int arr[], int n) {
+    return *min_element(arr, arr + n);
+}
+
+static int findMaximum(int arr[], int n) {
+    return *max_element(arr, arr + n);
+}
+
+static bool runAgain() {
+    char choice;
+    cout << "\nDo you want to run the program again? (y/n): ";
+    cin >> choice;
+    return (choice == 'y' || choice == 'Y');
+}
+
+int main() {
+    char runProgram = 'y';
+
+    while (runProgram == 'y' || runProgram == 'Y') {
+        cout << "Welcome to the Grade Average Calculator!" << endl;
+
+        string courseDept, courseNum, courseName;
+        cout << "Enter the course dept./major focus: ";
+        cin.ignore(); 
+        getline(cin, courseDept);
+        cout << "Enter the course's number: ";
+        getline(cin, courseNum);
+        cout << "Enter the course's name: ";
+        getline(cin, courseName);
+
+        int numStudents, pointsPossible;
+        cout << "Enter the number of students that will be scored/graded: ";
+        cin >> numStudents;
+        cout << "Enter points possible: ";
+        cin >> pointsPossible;
+
+        int* arr = new int[numStudents];
+        cout << "Please enter the scores for the students:" << endl;
+        for (int i = 0; i < numStudents; i++) {
+            cout << "Enter the score for student " << i + 1 << ": ";
+            cin >> arr[i];
+        }
+
+        recursiveBubbleSort(arr, numStudents);
+
+        cout << "\nCourse: " << courseDept << " " << courseNum << ": " << courseName << endl;
+        cout << "Scores: ";
+        for (int i = 0; i < numStudents; i++) {
+            cout << arr[i] << " ";
+        }
+
+        cout << "\nAverage: " << calculateAverage(arr, numStudents, pointsPossible) << "%" << endl;
+        cout << "Lowest Score: " << findMinimum(arr, numStudents) << endl;
+        cout << "Highest Score: " << findMaximum(arr, numStudents) << endl;
+
+        cout << "\nThank you for using the grade average calculator!" << endl;
+
+        delete[] arr;
+
+        runProgram = runAgain() ? 'y' : 'n';
+    }
+
+    return 0;
+}
